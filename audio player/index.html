@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUSIC PLAYER</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="container">
+        <h4>Music player</h4>
+        <img id="track_image">
+        <p id="title">title.mp3</p>
+        <marquee id="artist">Artist name</marquee>
+        <input type="range" id="duration_slider" min="0" max="100" value="0" onclick="change_duration()">
+        <button onclick="previous_song()" id="pre"><i class="fa fa-step-backward"></i></button>
+        <button onclick="justplay()" id="play"><i class="fa fa-play"></i></button>
+        <button onclick="next_song()" id="next"><i class="fa fa-step-forward"></i></button>
+    </div>
+    <script>
+        let previous = document.querySelector('#pre');
+        let play = document.querySelector('#play');
+        let next = document.querySelector('#next');
+        let title = document.querySelector('#title');
+        let artist = document.querySelector('#artist');
+        let slider = document.querySelector('#duration_slider');
+        let track_image = document.querySelector('#track_image');
+        let timer;
+        let autoplay = 1;
+        let index_no = 0;
+        let playing_song=false;
+        let track = document.createElement('audio');
+        let All_song =[
+            {
+                name : "First Song",
+                path : "music/song1.mp3",
+                img : "img/img1.jpg",
+                artist : "BOM DIGGY SONG"
+            },
+            {
+                name : "Second Song",
+                path : "music/song2.mp3",
+                img : "img/img2.jpg",
+                artist : "BOUNCY HOUSE SONG"
+            },
+            {
+                name : "Third Song",
+                path : "music/song3.mp3",
+                img : "img/img3.jpg",
+                artist : "POWER RANGERS SONG"
+            },
+            {
+                name : "Fourth Song",
+                path : "music/song4.mp3",
+                img : "img/img4.jpg",
+                artist : "VATHIYAR BGM SONG",
+            }
+        ];
+
+        function load_track(index_no){
+            clearInterval(timer);
+            reset_slider();
+
+            track.src = All_song[index_no].path;
+            title.innerHTML = All_song[index_no].name;
+            track_image.src = All_song[index_no].img;
+            artist.innerHTML = All_song[index_no].artist;
+
+            timer = setInterval(duration_slider,1000);
+            total.innerHTML = All_song.length;
+            presnet.innerHTML = index_no+1; 
+        }
+        load_track(index_no);
+
+        function justplay(){
+            if(playing_song==false){
+                playsong();
+            }
+            else{
+                pausesong();
+            }
+        }
+        function reset_slider(){
+            slider.value = 0;
+        }
+        function playsong(){
+            track.play();
+            playing_song = true;
+            play.innerHTML = '<i class="fa fa-pause"></i>'
+
+        }
+        function pausesong(){
+            track.pause();
+            playing_song = false;
+            play.innerHTML = '<i class="fa fa-play"></i>'
+
+        }
+        function next_song(){
+            if(index_no<All_song.length -1){
+                index_no += 1;
+                load_track(index_no);
+                playsong();
+            }
+            else{
+                index_no = 0;
+                load_track(index_no);
+                playsong();
+            }
+        }
+        function previous_song(){
+            if(index_no>0){
+                index_no -= 1;
+                load_track(index_no);
+                playsong();
+            }
+            else{
+                index_no = All_song.length;
+                load_track(index_no);
+                playsong();
+            }
+        }
+
+        function change_duration(){
+            slider_position = track.duration * (slider.value / 100);
+            track.currentTime = slider_position;
+        }
+    </script>
+</body>
+</html>
